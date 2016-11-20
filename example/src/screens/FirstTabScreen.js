@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 
+import MyCustomButton from '../components/MyCustomButton'
+
 export default class FirstTabScreen extends Component {
   static navigatorButtons = {
     leftButtons: [{
@@ -17,8 +19,12 @@ export default class FirstTabScreen extends Component {
     }],
     rightButtons: [
       {
-        title: 'Edit',
-        id: 'edit'
+        id: 'edit',
+        customButton: () => {
+          return (
+            <MyCustomButton />
+          );
+        }
       },
       {
         icon: require('../../img/navicon_add.png'),

@@ -5,6 +5,7 @@
 #import "RCTConvert.h"
 #import <objc/runtime.h>
 #import "RCCTitleViewHelper.h"
+#import "RNNCustomNavButtonManager.h"
 
 @implementation RCCNavigationController
 
@@ -207,16 +208,27 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
   }
 }
 
--(void)onButtonPress:(UIBarButtonItem*)barButtonItem
+-(void) onButtonPressWithId:(NSString*)buttonId callbackId:(NSString*)callbackId
 {
-  NSString *callbackId = objc_getAssociatedObject(barButtonItem, &CALLBACK_ASSOCIATED_KEY);
-  if (!callbackId) return;
-  NSString *buttonId = objc_getAssociatedObject(barButtonItem, &CALLBACK_ASSOCIATED_ID);
   [[[RCCManager sharedInstance] getBridge].eventDispatcher sendAppEventWithName:callbackId body:@
    {
      @"type": @"NavBarButtonPress",
      @"id": buttonId ? buttonId : [NSNull null]
    }];
+}
+
+-(void)onButtonPress:(UIBarButtonItem*)barButtonItem
+{
+  NSString *callbackId = objc_getAssociatedObject(barButtonItem, &CALLBACK_ASSOCIATED_KEY);
+  if (!callbackId) return;
+  NSString *buttonId = objc_getAssociatedObject(barButtonItem, &CALLBACK_ASSOCIATED_ID);
+  [self onButtonPressWithId:buttonId callbackId:callbackId];
+}
+
+-(void) onCustomButtonPress:(UITapGestureRecognizer*)gesture
+{
+  RNNCustomNavButton *button = gesture.view;
+  [self onButtonPressWithId:button.buttonId callbackId:button.callbackId];
 }
 
 -(void)setButtons:(NSArray*)buttons viewController:(UIViewController*)viewController side:(NSString*)side animated:(BOOL)animated
@@ -225,12 +237,25 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
   for (NSDictionary *button in buttons)
   {
     NSString *title = button[@"title"];
+    NSString *buttonId = button[@"id"];
     UIImage *iconImage = nil;
     id icon = button[@"icon"];
     if (icon) iconImage = [RCTConvert UIImage:icon];
     
     UIBarButtonItem *barButtonItem;
-    if (iconImage)
+    if(button[@"customButton"] && buttonId)
+    {
+      RNNCustomNavButton *customButton = [RNNCustomNavButtonManager buttonViewWithId:buttonId];
+      if(customButton)
+      {
+        UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onCustomButtonPress:)];
+        [customButton addGestureRecognizer:gesture];
+        
+        barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customButton];
+      }
+      else continue;
+    }
+    else if (iconImage)
     {
       barButtonItem = [[UIBarButtonItem alloc] initWithImage:iconImage style:UIBarButtonItemStylePlain target:self action:@selector(onButtonPress:)];
     }
@@ -239,10 +264,11 @@ NSString const *CALLBACK_ASSOCIATED_ID = @"RCCNavigationController.CALLBACK_ASSO
       barButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:@selector(onButtonPress:)];
     }
     else continue;
+    
     objc_setAssociatedObject(barButtonItem, &CALLBACK_ASSOCIATED_KEY, button[@"onPress"], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [barButtonItems addObject:barButtonItem];
     
-    NSString *buttonId = button[@"id"];
+    
     if (buttonId)
     {
       objc_setAssociatedObject(barButtonItem, &CALLBACK_ASSOCIATED_ID, buttonId, OBJC_ASSOCIATION_RETAIN_NONATOMIC);

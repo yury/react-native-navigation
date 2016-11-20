@@ -1,8 +1,9 @@
 /*eslint-disable*/
 import React from 'react';
-import {AppRegistry} from 'react-native';
+import {AppRegistry, View} from 'react-native';
 import platformSpecific from './deprecated/platformSpecificDeprecated';
 import Screen from './Screen';
+import CustomNavButton from './CustomNavButton/CustomNavButton'
 
 import PropRegistry from './PropRegistry';
 
@@ -21,6 +22,43 @@ function registerComponent(screenID, generator, store = undefined, Provider = un
   }
 }
 
+function _prepareCustomButtons(buttonsArray, resultCustomButtonsArray) {
+  if (buttonsArray) {
+    buttonsArray.map((button) => {
+      if(button.customButton) {
+        resultCustomButtonsArray.push(
+          <CustomNavButton key={button.id}
+                           buttonId={button.id}
+                           callbackId={button.onPress}
+                           style={{position: 'absolute'}}>
+            {button.customButton()}
+          </CustomNavButton>
+        );
+      }
+    });
+  }
+}
+
+function _renderCustomNavButtons(navigatorButtons) {
+  const customButtons = [];
+  if(navigatorButtons) {
+    _prepareCustomButtons(navigatorButtons.rightButtons, customButtons);
+    _prepareCustomButtons(navigatorButtons.leftButtons, customButtons);
+  }
+  return customButtons;
+}
+
+function _setCustomButtons(navigator, navigatorButtons) {
+  if (navigatorButtons && (navigatorButtons.rightButtons || navigatorButtons.leftButtons)) {
+    setTimeout(() => {
+      navigator.setButtons({
+        rightButtons: navigatorButtons.rightButtons,
+        leftButtons: navigatorButtons.leftButtons
+      });
+    }, 0);
+  }
+}
+
 function _registerComponentNoRedux(screenID, generator) {
   const generatorWrapper = function() {
     const InternalComponent = generator();
@@ -35,6 +73,10 @@ function _registerComponentNoRedux(screenID, generator) {
         }
       }
 
+      componentDidMount() {
+        _setCustomButtons(this.navigator, InternalComponent.navigatorButtons)
+      }
+
       componentWillReceiveProps(nextProps) {
         this.setState({
           internalProps: {...PropRegistry.load(this.props.screenInstanceID), ...nextProps}
@@ -43,7 +85,10 @@ function _registerComponentNoRedux(screenID, generator) {
 
       render() {
         return (
-          <InternalComponent navigator={this.navigator} {...this.state.internalProps} />
+          <View>
+            {_renderCustomNavButtons(InternalComponent.navigatorButtons)}
+            <InternalComponent navigator={this.navigator} {...this.state.internalProps} />
+          </View>
         );
       }
     };
@@ -66,6 +111,10 @@ function _registerComponentRedux(screenID, generator, store, Provider) {
         }
       }
 
+      componentDidMount() {
+        _setCustomButtons(this.navigator, InternalComponent.navigatorButtons)
+      }
+
       componentWillReceiveProps(nextProps) {
         this.setState({
           internalProps: {...PropRegistry.load(this.props.screenInstanceID), ...nextProps}
@@ -75,6 +124,7 @@ function _registerComponentRedux(screenID, generator, store, Provider) {
       render() {
         return (
           <Provider store={store}>
+            {_renderCustomNavButtons(InternalComponent.navigatorButtons)}
             <InternalComponent navigator={this.navigator} {...this.state.internalProps} />
           </Provider>
         );
