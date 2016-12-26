@@ -186,6 +186,14 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         }
     }
 
+    void replacePrevious(ScreenParams params) {
+        if (modalController.containsNavigator(params.getNavigatorId())) {
+            modalController.replacePrevious(params);
+        } else {
+            layout.replacePrevious(params);
+        }
+    }
+
     void pop(ScreenParams params) {
         if (modalController.containsNavigator(params.getNavigatorId())) {
             modalController.pop(params);

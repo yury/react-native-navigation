@@ -12,6 +12,7 @@ const _allNavigatorEventHandlers = {};
 
 const NavigationSpecific = {
   push: platformSpecific.navigatorPush,
+  replacePrevious: platformSpecific.navigatorReplacePrevious,
   pop: platformSpecific.navigatorPop,
   popToRoot: platformSpecific.navigatorPopToRoot,
   resetTo: platformSpecific.navigatorResetTo
@@ -28,6 +29,10 @@ class Navigator {
 
   push(params = {}) {
     return NavigationSpecific.push(this, params);
+  }
+
+  replacePrevious(params = {}) {
+    return NavigationSpecific.replacePrevious(this, params);
   }
 
   pop(params = {}) {

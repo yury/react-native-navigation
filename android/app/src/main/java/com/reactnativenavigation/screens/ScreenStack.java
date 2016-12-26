@@ -80,6 +80,19 @@ public class ScreenStack {
         }
     }
 
+    public void replacePrevious(final ScreenParams params, LayoutParams layoutParams) {
+        if (stack.size() <= 1) {
+            return;
+        }
+        Screen currentScreen = stack.pop();
+        stack.pop();
+        Screen screen = ScreenFactory.create(activity, params, leftButtonOnClickListener);
+        screen.setVisibility(View.INVISIBLE);
+        screen.setLayoutParams(layoutParams);
+        stack.push(screen);
+        stack.push(currentScreen);
+    }
+
     private void pushScreenToVisibleStack(LayoutParams layoutParams, final Screen nextScreen, final Screen previousScreen) {
         nextScreen.setVisibility(View.INVISIBLE);
         addScreen(nextScreen, layoutParams);

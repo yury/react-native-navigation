@@ -124,9 +124,13 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
 
     @Override
     public void push(ScreenParams params) {
-        LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
-        stack.push(params, lp);
+        stack.push(params, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
         EventBus.instance.post(new ScreenChangedEvent(params));
+    }
+
+    @Override
+    public void replacePrevious(ScreenParams params) {
+        stack.replacePrevious(params, new LayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.reactnativenavigation.views.LeftButtonOnClickListener;
 public interface ScreenStackContainer extends LeftButtonOnClickListener {
     void push(ScreenParams screenParams);
 
+    void replacePrevious(ScreenParams screenParams);
+
     void pop(ScreenParams screenParams);
 
     void popToRoot(ScreenParams params);

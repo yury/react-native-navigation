@@ -58,6 +58,10 @@ public class ModalController implements ScreenStackContainer, Modal.OnModalDismi
         stack.peek().push(params);
     }
 
+    public void replacePrevious(ScreenParams params) {
+        stack.peek().replacePrevious(params);
+    }
+
     @Override
     public void pop(ScreenParams screenParams) {
         stack.peek().pop(screenParams);

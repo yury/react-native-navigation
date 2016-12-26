@@ -147,6 +147,11 @@ public class NavigationReactModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void replacePrevious(final ReadableMap params) {
+        NavigationCommandsHandler.navigatorReplacePrevious(BundleConverter.toBundle(params));
+    }
+
+    @ReactMethod
     public void pop(final ReadableMap params) {
         NavigationCommandsHandler.pop(BundleConverter.toBundle(params));
     }

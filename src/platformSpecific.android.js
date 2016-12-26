@@ -15,6 +15,11 @@ function push(screenParams) {
   NativeReactModule.push(screenParams);
 }
 
+function replacePrevious(screenParams) {
+  savePassProps(screenParams);
+  NativeReactModule.replacePrevious(screenParams);
+}
+
 function pop(screenParams) {
   NativeReactModule.pop(screenParams);
 }
@@ -134,6 +139,7 @@ function dismissContextualMenu(screenInstanceID) {
 module.exports = {
   startApp,
   push,
+  replacePrevious,
   pop,
   popToRoot,
   newStack,

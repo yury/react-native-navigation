@@ -238,6 +238,12 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
     }
 
     @Override
+    public void replacePrevious(ScreenParams params) {
+        ScreenStack screenStack = getScreenStack(params.getNavigatorId());
+        screenStack.replacePrevious(params, createScreenLayoutParams(params));
+    }
+
+    @Override
     public void pop(ScreenParams params) {
         getCurrentScreenStack().pop(params.animateScreenTransitions, new ScreenStack.OnScreenPop() {
             @Override
