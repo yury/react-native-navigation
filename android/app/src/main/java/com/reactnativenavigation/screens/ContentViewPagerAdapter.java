@@ -20,11 +20,13 @@ import java.util.List;
 class ContentViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener {
     private List<ContentView> contentViews;
     private List<PageParams> pageParams;
+    private ViewPagerScreen.OnScreenChanged onScreenChanged;
     private int currentPosition = 0;
 
-    ContentViewPagerAdapter(List<ContentView> contentViews, List<PageParams> pageParams) {
+    ContentViewPagerAdapter(List<ContentView> contentViews, List<PageParams> pageParams, ViewPagerScreen.OnScreenChanged onScreenChanged) {
         this.contentViews = contentViews;
         this.pageParams = pageParams;
+        this.onScreenChanged = onScreenChanged;
     }
 
     @Override
@@ -58,6 +60,7 @@ class ContentViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageCh
         currentPosition = position;
         EventBus.instance.post(new ScreenChangedEvent(pageParams.get(currentPosition)));
         sendTabSelectedEventToJs();
+        onScreenChanged.onScreenChanged(currentPosition);
     }
 
     @Override

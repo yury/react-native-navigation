@@ -41,8 +41,7 @@ public class SnackbarAndFabContainer extends CoordinatorLayout implements Snakba
     public void onEvent(Event event) {
         if (ScreenChangedEvent.TYPE.equals(event.getType())) {
             onScreenChange(((ScreenChangedEvent) event).fabParams);
-        }
-        if (FabSetEvent.TYPE.equals(event.getType())) {
+        } else if (FabSetEvent.TYPE.equals(event.getType())) {
             updateFab(((FabSetEvent) event).fabParams);
         }
     }

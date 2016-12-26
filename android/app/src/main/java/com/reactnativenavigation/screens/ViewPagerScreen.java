@@ -5,8 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.reactnativenavigation.events.Event;
-import com.reactnativenavigation.events.ViewPagerScreenChangedEvent;
 import com.reactnativenavigation.params.BaseScreenParams;
 import com.reactnativenavigation.params.PageParams;
 import com.reactnativenavigation.params.ScreenParams;
@@ -19,13 +17,22 @@ import java.util.List;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class ViewPagerScreen extends Screen {
-
+    interface OnScreenChanged {
+        void onScreenChanged(int selectedScreenIndex);
+    }
+    private OnScreenChanged onScreenChanged;
     private static final int OFFSCREEN_PAGE_LIMIT = 99;
     protected List<ContentView> contentViews;
     protected ViewPager viewPager;
 
     public ViewPagerScreen(AppCompatActivity activity, ScreenParams screenParams, LeftButtonOnClickListener backButtonListener) {
         super(activity, screenParams, backButtonListener);
+        onScreenChanged = new OnScreenChanged() {
+            @Override
+            public void onScreenChanged(int selectedScreenIndex) {
+
+            }
+        };
     }
 
     @Override
@@ -73,7 +80,8 @@ public class ViewPagerScreen extends Screen {
     }
 
     private void setupViewPager(TabLayout tabLayout) {
-        ContentViewPagerAdapter adapter = new ContentViewPagerAdapter(contentViews, screenParams.topTabParams);
+
+        ContentViewPagerAdapter adapter = new ContentViewPagerAdapter(contentViews, screenParams.topTabParams, onScreenChanged);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(adapter);
         tabLayout.setupWithViewPager(viewPager);
