@@ -233,19 +233,30 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     {
         viewController.navigationController.navigationBar.tintColor = nil;
     }
-    
+  
+    NSString *statusBarTextColorSchemeSingleScreen = self.navigatorStyle[@"statusBarTextColorSchemeSingleScreen"];
+    if (statusBarTextColorSchemeSingleScreen && [statusBarTextColorSchemeSingleScreen isEqualToString:@"light"])
+    {
+      self._statusBarTextColorSchemeLight = YES;
+    }
+    else
+    {
+      self._statusBarTextColorSchemeLight = NO;
+    }
+  
     NSString *statusBarTextColorScheme = self.navigatorStyle[@"statusBarTextColorScheme"];
-    if (statusBarTextColorScheme && [statusBarTextColorScheme isEqualToString:@"light"])
+    if (statusBarTextColorScheme && [statusBarTextColorScheme isEqualToString:@"light"] && !statusBarTextColorSchemeSingleScreen)
     {
         viewController.navigationController.navigationBar.barStyle = UIBarStyleBlack;
         self._statusBarTextColorSchemeLight = YES;
+      
     }
     else
     {
         viewController.navigationController.navigationBar.barStyle = UIBarStyleDefault;
         self._statusBarTextColorSchemeLight = NO;
     }
-    
+  
     NSNumber *navBarHidden = self.navigatorStyle[@"navBarHidden"];
     BOOL navBarHiddenBool = navBarHidden ? [navBarHidden boolValue] : NO;
     if (viewController.navigationController.navigationBarHidden != navBarHiddenBool)
