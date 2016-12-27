@@ -244,17 +244,20 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
       self._statusBarTextColorSchemeLight = NO;
     }
   
-    NSString *statusBarTextColorScheme = self.navigatorStyle[@"statusBarTextColorScheme"];
-    if (statusBarTextColorScheme && [statusBarTextColorScheme isEqualToString:@"light"] && !statusBarTextColorSchemeSingleScreen)
-    {
-        viewController.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-        self._statusBarTextColorSchemeLight = YES;
-      
-    }
-    else
-    {
-        viewController.navigationController.navigationBar.barStyle = UIBarStyleDefault;
-        self._statusBarTextColorSchemeLight = NO;
+    // incase statusBarTextColorSchemeSingleScreen exists ignore the statusBarTextColorScheme which more globaly
+    if (!statusBarTextColorSchemeSingleScreen) {
+      NSString *statusBarTextColorScheme = self.navigatorStyle[@"statusBarTextColorScheme"];
+      if (statusBarTextColorScheme && [statusBarTextColorScheme isEqualToString:@"light"] && !statusBarTextColorSchemeSingleScreen)
+      {
+          viewController.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+          self._statusBarTextColorSchemeLight = YES;
+        
+      }
+      else
+      {
+          viewController.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+          self._statusBarTextColorSchemeLight = NO;
+      }
     }
   
     NSNumber *navBarHidden = self.navigatorStyle[@"navBarHidden"];
