@@ -7,6 +7,7 @@
 #import "RCCManager.h"
 #import "RCTConvert.h"
 #import "RCCExternalViewControllerProtocol.h"
+#import "RCTScrollingNavBarHandler.h"
 
 NSString* const RCCViewControllerCancelReactTouchesNotification = @"RCCViewControllerCancelReactTouchesNotification";
 
@@ -22,6 +23,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 @property (nonatomic, strong) NSDictionary *originalNavBarImages;
 @property (nonatomic, strong) UIImageView *navBarHairlineImageView;
 @property (nonatomic, weak) id <UIGestureRecognizerDelegate> originalInteractivePopGestureDelegate;
+@property (nonatomic, strong) RCTScrollingNavBarHandler *rctScrollingNavBarHandler;
 @end
 
 @implementation RCCViewController
@@ -96,60 +98,60 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 
 - (instancetype)initWithProps:(NSDictionary *)props children:(NSArray *)children globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
 {
-    NSString *component = props[@"component"];
-    if (!component) return nil;
-    
-    NSDictionary *passProps = props[@"passProps"];
-    NSDictionary *navigatorStyle = props[@"style"];
-    
-    NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
-    [mergedProps addEntriesFromDictionary:passProps];
-    
-    RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
-    if (!reactView) return nil;
-    
-    self = [super init];
-    if (!self) return nil;
-    
-    [self commonInit:reactView navigatorStyle:navigatorStyle props:props];
-    
-    return self;
+  NSString *component = props[@"component"];
+  if (!component) return nil;
+
+  NSDictionary *passProps = props[@"passProps"];
+  NSDictionary *navigatorStyle = props[@"style"];
+
+  NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
+  [mergedProps addEntriesFromDictionary:passProps];
+  
+  RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
+  if (!reactView) return nil;
+
+  self = [super init];
+  if (!self) return nil;
+
+  [self commonInit:reactView navigatorStyle:navigatorStyle props:props];
+
+  return self;
 }
 
 - (instancetype)initWithComponent:(NSString *)component passProps:(NSDictionary *)passProps navigatorStyle:(NSDictionary*)navigatorStyle globalProps:(NSDictionary *)globalProps bridge:(RCTBridge *)bridge
 {
-    NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
-    [mergedProps addEntriesFromDictionary:passProps];
-    
-    RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
-    if (!reactView) return nil;
-    
-    self = [super init];
-    if (!self) return nil;
-    
-    [self commonInit:reactView navigatorStyle:navigatorStyle props:passProps];
-    
-    return self;
+  NSMutableDictionary *mergedProps = [NSMutableDictionary dictionaryWithDictionary:globalProps];
+  [mergedProps addEntriesFromDictionary:passProps];
+  
+  RCTRootView *reactView = [[RCTRootView alloc] initWithBridge:bridge moduleName:component initialProperties:mergedProps];
+  if (!reactView) return nil;
+
+  self = [super init];
+  if (!self) return nil;
+
+  [self commonInit:reactView navigatorStyle:navigatorStyle props:passProps];
+
+  return self;
 }
 
 - (void)commonInit:(RCTRootView*)reactView navigatorStyle:(NSDictionary*)navigatorStyle props:(NSDictionary*)props
 {
-    self.view = reactView;
-    
-    self.edgesForExtendedLayout = UIRectEdgeNone; // default
-    self.automaticallyAdjustsScrollViewInsets = NO; // default
-    
-    self.navigatorStyle = [NSMutableDictionary dictionaryWithDictionary:navigatorStyle];
-    
-    [self setStyleOnInit];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRNReload) name:RCTReloadNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCancelReactTouches) name:RCCViewControllerCancelReactTouchesNotification object:nil];
-    
-    // In order to support 3rd party native ViewControllers, we support passing a class name as a prop mamed `ExternalNativeScreenClass`
-    // In this case, we create an instance and add it as a child ViewController which preserves the VC lifecycle.
-    // In case some props are necessary in the native ViewController, the ExternalNativeScreenProps can be used to pass them
-    [self addExternalVCIfNecessary:props];
+  self.view = reactView;
+  
+  self.edgesForExtendedLayout = UIRectEdgeNone; // default
+  self.automaticallyAdjustsScrollViewInsets = NO; // default
+  
+  self.navigatorStyle = [NSMutableDictionary dictionaryWithDictionary:navigatorStyle];
+  
+  [self setStyleOnInit];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onRNReload) name:RCTReloadNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCancelReactTouches) name:RCCViewControllerCancelReactTouchesNotification object:nil];
+  
+  // In order to support 3rd party native ViewControllers, we support passing a class name as a prop mamed `ExternalNativeScreenClass`
+  // In this case, we create an instance and add it as a child ViewController which preserves the VC lifecycle.
+  // In case some props are necessary in the native ViewController, the ExternalNativeScreenProps can be used to pass them
+  [self addExternalVCIfNecessary:props];
 }
 
 - (void)dealloc
@@ -166,9 +168,9 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 
 -(void)onCancelReactTouches
 {
-    if ([self.view isKindOfClass:[RCTRootView class]]){
-        [(RCTRootView*)self.view cancelTouches];
-    }
+  if ([self.view isKindOfClass:[RCTRootView class]]){
+    [(RCTRootView*)self.view cancelTouches];
+  }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -176,6 +178,13 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     [super viewWillAppear:animated];
     
     [self setStyleOnAppear];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self handleNavBarAutoScroll];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -189,7 +198,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 // we want to reset the style to what we expect (so we need to reset on every willAppear)
 - (void)setStyleOnAppear
 {
-    [self setStyleOnAppearForViewController:self];
+  [self setStyleOnAppearForViewController:self];
 }
 
 -(void)setStyleOnAppearForViewController:(UIViewController*)viewController
@@ -200,7 +209,7 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
         UIColor *color = screenBackgroundColor != (id)[NSNull null] ? [RCTConvert UIColor:screenBackgroundColor] : nil;
         self.view.backgroundColor = color;
     }
-    
+ 
     NSString *navBarBackgroundColor = self.navigatorStyle[@"navBarBackgroundColor"];
     if (navBarBackgroundColor)
     {
@@ -325,30 +334,30 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     BOOL navBarTransparentBool = navBarTransparent ? [navBarTransparent boolValue] : NO;
     
     void (^action)() = ^ {
-        if (navBarTransparentBool)
+    if (navBarTransparentBool)
+    {
+        if (![viewController.navigationController.navigationBar viewWithTag:TRANSPARENT_NAVBAR_TAG])
         {
-            if (![viewController.navigationController.navigationBar viewWithTag:TRANSPARENT_NAVBAR_TAG])
-            {
-                [self storeOriginalNavBarImages];
-                
-                [viewController.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-                viewController.navigationController.navigationBar.shadowImage = [UIImage new];
-                UIView *transparentView = [[UIView alloc] initWithFrame:CGRectZero];
-                transparentView.tag = TRANSPARENT_NAVBAR_TAG;
-                [viewController.navigationController.navigationBar insertSubview:transparentView atIndex:0];
-            }
+            [self storeOriginalNavBarImages];
+            
+            [viewController.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+            viewController.navigationController.navigationBar.shadowImage = [UIImage new];
+            UIView *transparentView = [[UIView alloc] initWithFrame:CGRectZero];
+            transparentView.tag = TRANSPARENT_NAVBAR_TAG;
+            [viewController.navigationController.navigationBar insertSubview:transparentView atIndex:0];
         }
-        else
+    }
+    else
+    {
+        UIView *transparentView = [viewController.navigationController.navigationBar viewWithTag:TRANSPARENT_NAVBAR_TAG];
+        if (transparentView)
         {
-            UIView *transparentView = [viewController.navigationController.navigationBar viewWithTag:TRANSPARENT_NAVBAR_TAG];
-            if (transparentView)
-            {
-                [transparentView removeFromSuperview];
-                [viewController.navigationController.navigationBar setBackgroundImage:self.originalNavBarImages[@"bgImage"] forBarMetrics:UIBarMetricsDefault];
-                viewController.navigationController.navigationBar.shadowImage = self.originalNavBarImages[@"shadowImage"];
-                self.originalNavBarImages = nil;
-            }
+            [transparentView removeFromSuperview];
+            [viewController.navigationController.navigationBar setBackgroundImage:self.originalNavBarImages[@"bgImage"] forBarMetrics:UIBarMetricsDefault];
+            viewController.navigationController.navigationBar.shadowImage = self.originalNavBarImages[@"shadowImage"];
+            self.originalNavBarImages = nil;
         }
+    }
     };
     
     if(self.transitionCoordinator.initiallyInteractive || !navBarTransparentBool) {
@@ -406,18 +415,18 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
     {
         self.navBarHairlineImageView.hidden = NO;
     }
-    
+  
     //Bug fix: in case there is a interactivePopGestureRecognizer, it prevents react-native from getting touch events on the left screen area that the gesture handles
     //overriding the delegate of the gesture prevents this from happening while keeping the gesture intact (another option was to disable it completely by demand)
     self.originalInteractivePopGestureDelegate = nil;
     if (self.navigationController != nil && self.navigationController.interactivePopGestureRecognizer != nil)
     {
-        id <UIGestureRecognizerDelegate> interactivePopGestureRecognizer = self.navigationController.interactivePopGestureRecognizer.delegate;
-        if (interactivePopGestureRecognizer != nil)
-        {
-            self.originalInteractivePopGestureDelegate = interactivePopGestureRecognizer;
-            self.navigationController.interactivePopGestureRecognizer.delegate = self;
-        }
+      id <UIGestureRecognizerDelegate> interactivePopGestureRecognizer = self.navigationController.interactivePopGestureRecognizer.delegate;
+      if (interactivePopGestureRecognizer != nil)
+      {
+        self.originalInteractivePopGestureDelegate = interactivePopGestureRecognizer;
+        self.navigationController.interactivePopGestureRecognizer.delegate = self;
+      }
     }
 }
 
@@ -440,12 +449,14 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 -(void)setStyleOnDisappear
 {
     self.navBarHairlineImageView.hidden = NO;
-    
+  
     if (self.navigationController != nil && self.navigationController.interactivePopGestureRecognizer != nil && self.originalInteractivePopGestureDelegate != nil)
     {
-        self.navigationController.interactivePopGestureRecognizer.delegate = self.originalInteractivePopGestureDelegate;
-        self.originalInteractivePopGestureDelegate = nil;
+      self.navigationController.interactivePopGestureRecognizer.delegate = self.originalInteractivePopGestureDelegate;
+      self.originalInteractivePopGestureDelegate = nil;
     }
+    
+     self.rctScrollingNavBarHandler = nil;
 }
 
 // only styles that can't be set on willAppear should be set here
@@ -539,58 +550,71 @@ const NSInteger TRANSPARENT_NAVBAR_TAG = 78264803;
 
 -(void)addExternalVCIfNecessary:(NSDictionary*)props
 {
-    NSString *externalScreenClass = props[@"externalNativeScreenClass"];
-    if (externalScreenClass != nil)
+  NSString *externalScreenClass = props[@"externalNativeScreenClass"];
+  if (externalScreenClass != nil)
+  {
+    Class class = NSClassFromString(externalScreenClass);
+    if (class != NULL)
     {
-        Class class = NSClassFromString(externalScreenClass);
-        if (class != NULL)
-        {
-            id obj = [[class alloc] init];
-            if (obj != nil && [obj isKindOfClass:[UIViewController class]] && [obj conformsToProtocol:@protocol(RCCExternalViewControllerProtocol)])
-            {
-                ((id <RCCExternalViewControllerProtocol>)obj).controllerDelegate = self;
-                [obj setProps:props[@"externalNativeScreenProps"]];
-                
-                UIViewController *viewController = (UIViewController*)obj;
-                [self addChildViewController:viewController];
-                viewController.view.frame = self.view.bounds;
-                [self.view addSubview:viewController.view];
-                [viewController didMoveToParentViewController:self];
-            }
-            else
-            {
-                NSLog(@"addExternalVCIfNecessary: could not create instance. Make sure that your class is a UIViewController whihc confirms to RCCExternalViewControllerProtocol");
-            }
-        }
-        else
-        {
-            NSLog(@"addExternalVCIfNecessary: could not create class from string. Check that the proper class name wass passed in ExternalNativeScreenClass");
-        }
+      id obj = [[class alloc] init];
+      if (obj != nil && [obj isKindOfClass:[UIViewController class]] && [obj conformsToProtocol:@protocol(RCCExternalViewControllerProtocol)])
+      {
+        ((id <RCCExternalViewControllerProtocol>)obj).controllerDelegate = self;
+        [obj setProps:props[@"externalNativeScreenProps"]];
+        
+        UIViewController *viewController = (UIViewController*)obj;
+        [self addChildViewController:viewController];
+        viewController.view.frame = self.view.bounds;
+        [self.view addSubview:viewController.view];
+        [viewController didMoveToParentViewController:self];
+      }
+      else
+      {
+        NSLog(@"addExternalVCIfNecessary: could not create instance. Make sure that your class is a UIViewController whihc confirms to RCCExternalViewControllerProtocol");
+      }
     }
+    else
+    {
+      NSLog(@"addExternalVCIfNecessary: could not create class from string. Check that the proper class name wass passed in ExternalNativeScreenClass");
+    }
+  }
 }
 
 #pragma mark - NewRelic
 
 - (NSString*) customNewRelicInteractionName
 {
-    NSString *interactionName = nil;
-    
-    if (self.view != nil && [self.view isKindOfClass:[RCTRootView class]])
+  NSString *interactionName = nil;
+  
+  if (self.view != nil && [self.view isKindOfClass:[RCTRootView class]])
+  {
+    NSString *moduleName = ((RCTRootView*)self.view).moduleName;
+    if(moduleName != nil)
     {
-        NSString *moduleName = ((RCTRootView*)self.view).moduleName;
-        if(moduleName != nil)
-        {
-            interactionName = [NSString stringWithFormat:@"RCCViewController: %@", moduleName];
-        }
+      interactionName = [NSString stringWithFormat:@"RCCViewController: %@", moduleName];
     }
-    
-    if (interactionName == nil)
-    {
-        interactionName = [NSString stringWithFormat:@"RCCViewController with title: %@", self.title];
-    }
-    
-    return interactionName;
+  }
+  
+  if (interactionName == nil)
+  {
+    interactionName = [NSString stringWithFormat:@"RCCViewController with title: %@", self.title];
+  }
+  
+  return interactionName;
 }
 
+#pragma mark - NavBar Auto Scroll
+
+-(void)handleNavBarAutoScroll
+{
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+       BOOL navBarAutoScroll = YES;//[self.navigatorStyle[@"navBarAutoScroll"] boolValue];
+       if (navBarAutoScroll && self.rctScrollingNavBarHandler == nil)
+       {
+           self.rctScrollingNavBarHandler = [[RCTScrollingNavBarHandler alloc] initWithViewController:self];
+       }
+    });
+}
 
 @end

@@ -32,6 +32,8 @@
 		D85082FF1CBCF8A800FDB961 /* MMExampleDrawerVisualStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D85082C51CBCF42400FDB961 /* MMExampleDrawerVisualStateManager.m */; };
 		D85083001CBCF8A800FDB961 /* UIViewController+MMDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D85082C71CBCF42400FDB961 /* UIViewController+MMDrawerController.m */; };
 		D8D779981D04B7180050CFEA /* RCTHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = D8D779971D04B7180050CFEA /* RCTHelpers.m */; };
+		D8DAD5E81E1479F8004FC337 /* RCTScrollingNavBarHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D8DAD5E51E1479F8004FC337 /* RCTScrollingNavBarHandler.m */; };
+		D8DAD5E91E1479F8004FC337 /* RCTScrollView+Hooks.m in Sources */ = {isa = PBXBuildFile; fileRef = D8DAD5E71E1479F8004FC337 /* RCTScrollView+Hooks.m */; };
 		D8E11C571CBD1F670018B644 /* RCCDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8E11C561CBD1F670018B644 /* RCCDrawerController.m */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +63,7 @@
 		CC84A1991C1A0C4E00B3A6A2 /* RCCTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCTabBarController.h; sourceTree = "<group>"; };
 		CC84A19A1C1A0C4E00B3A6A2 /* RCCTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = RCCTabBarController.m; sourceTree = "<group>"; tabWidth = 2; };
 		CC84A19B1C1A0C4E00B3A6A2 /* RCCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCViewController.h; sourceTree = "<group>"; };
-		CC84A19C1C1A0C4E00B3A6A2 /* RCCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = RCCViewController.m; sourceTree = "<group>"; tabWidth = 2; };
+		CC84A19C1C1A0C4E00B3A6A2 /* RCCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = RCCViewController.m; sourceTree = "<group>"; tabWidth = 4; };
 		D800E8171CFED1DB004A187F /* RCCExternalViewControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCExternalViewControllerProtocol.h; sourceTree = "<group>"; };
 		D83514F41D29719A00D53758 /* RCCNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCCNotification.h; sourceTree = "<group>"; };
 		D83514F51D29719A00D53758 /* RCCNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCNotification.m; sourceTree = "<group>"; };
@@ -103,6 +105,10 @@
 		D8AFADBD1BEE6F3F00A4592D /* libReactNativeNavigation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libReactNativeNavigation.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8D779961D04B7180050CFEA /* RCTHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTHelpers.h; sourceTree = "<group>"; };
 		D8D779971D04B7180050CFEA /* RCTHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTHelpers.m; sourceTree = "<group>"; };
+		D8DAD5E41E1479F8004FC337 /* RCTScrollingNavBarHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTScrollingNavBarHandler.h; sourceTree = "<group>"; };
+		D8DAD5E51E1479F8004FC337 /* RCTScrollingNavBarHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTScrollingNavBarHandler.m; sourceTree = "<group>"; };
+		D8DAD5E61E1479F8004FC337 /* RCTScrollView+Hooks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RCTScrollView+Hooks.h"; sourceTree = "<group>"; };
+		D8DAD5E71E1479F8004FC337 /* RCTScrollView+Hooks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RCTScrollView+Hooks.m"; sourceTree = "<group>"; };
 		D8E11C561CBD1F670018B644 /* RCCDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCCDrawerController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -227,6 +233,10 @@
 		D8D779951D04B7180050CFEA /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				D8DAD5E41E1479F8004FC337 /* RCTScrollingNavBarHandler.h */,
+				D8DAD5E51E1479F8004FC337 /* RCTScrollingNavBarHandler.m */,
+				D8DAD5E61E1479F8004FC337 /* RCTScrollView+Hooks.h */,
+				D8DAD5E71E1479F8004FC337 /* RCTScrollView+Hooks.m */,
 				D8D779961D04B7180050CFEA /* RCTHelpers.h */,
 				D8D779971D04B7180050CFEA /* RCTHelpers.m */,
 				26AFF3F31D7EEE2400CBA211 /* RCCTitleViewHelper.h */,
@@ -314,8 +324,10 @@
 				D85082E11CBCF54200FDB961 /* RCCDrawerHelper.m in Sources */,
 				D85082FE1CBCF8A800FDB961 /* MMDrawerVisualState.m in Sources */,
 				D85082FD1CBCF8A800FDB961 /* MMDrawerController.m in Sources */,
+				D8DAD5E81E1479F8004FC337 /* RCTScrollingNavBarHandler.m in Sources */,
 				D85082E41CBCF54200FDB961 /* SidebarAnimation.m in Sources */,
 				D8E11C571CBD1F670018B644 /* RCCDrawerController.m in Sources */,
+				D8DAD5E91E1479F8004FC337 /* RCTScrollView+Hooks.m in Sources */,
 				260804DB1CE0D9D20094DBA1 /* RCCToolBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
