@@ -33,9 +33,8 @@ import java.util.List;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottomNavigation.OnTabSelectedListener {
+public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.OnTabSelectedListener {
 
-    private final AppCompatActivity activity;
     private ActivityParams params;
     private SnackbarAndFabContainer snackbarAndFabContainer;
     private BottomTabs bottomTabs;
@@ -47,7 +46,6 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     public BottomTabsLayout(AppCompatActivity activity, ActivityParams params) {
         super(activity);
-        this.activity = activity;
         this.params = params;
         leftSideMenuParams = params.leftSideMenuParams;
         rightSideMenuParams = params.rightSideMenuParams;
@@ -81,7 +79,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
 
     private void createAndAddScreens(int position) {
         ScreenParams screenParams = params.tabParams.get(position);
-        ScreenStack newStack = new ScreenStack(activity, getScreenStackParent(), screenParams.getNavigatorId(), this);
+        ScreenStack newStack = new ScreenStack(getActivity(), getScreenStackParent(), screenParams.getNavigatorId(), this);
         newStack.pushInitialScreen(screenParams, createScreenLayoutParams(screenParams));
         screenStacks[position] = newStack;
     }
@@ -277,7 +275,7 @@ public class BottomTabsLayout extends RelativeLayout implements Layout, AHBottom
         removeView(currentScreenStack.peek());
         currentScreenStack.destroy();
 
-        ScreenStack newStack = new ScreenStack(activity, getScreenStackParent(), params.getNavigatorId(), this);
+        ScreenStack newStack = new ScreenStack(getActivity(), getScreenStackParent(), params.getNavigatorId(), this);
         LayoutParams lp = createScreenLayoutParams(params);
         newStack.pushInitialScreenWithAnimation(params, lp);
         screenStacks[currentStackIndex] = newStack;

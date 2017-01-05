@@ -27,9 +27,8 @@ import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class SingleScreenLayout extends RelativeLayout implements Layout {
+public class SingleScreenLayout extends BaseLayout {
 
-    private final AppCompatActivity activity;
     protected final ScreenParams screenParams;
     private final SideMenuParams leftSideMenuParams;
     private final SideMenuParams rightSideMenuParams;
@@ -41,7 +40,6 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
     public SingleScreenLayout(AppCompatActivity activity, SideMenuParams leftSideMenuParams,
                               SideMenuParams rightSideMenuParams, ScreenParams screenParams) {
         super(activity);
-        this.activity = activity;
         this.screenParams = screenParams;
         this.leftSideMenuParams = leftSideMenuParams;
         this.rightSideMenuParams = rightSideMenuParams;
@@ -74,7 +72,7 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
         if (stack != null) {
             stack.destroy();
         }
-        stack = new ScreenStack(activity, parent, screenParams.getNavigatorId(), this);
+        stack = new ScreenStack(getActivity(), parent, screenParams.getNavigatorId(), this);
         LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
         pushInitialScreen(lp);
     }
@@ -148,7 +146,7 @@ public class SingleScreenLayout extends RelativeLayout implements Layout {
         removeView(stack.peek());
         stack.destroy();
 
-        ScreenStack newStack = new ScreenStack(activity, getScreenStackParent(), params.getNavigatorId(), this);
+        ScreenStack newStack = new ScreenStack(getActivity(), getScreenStackParent(), params.getNavigatorId(), this);
         LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
         newStack.pushInitialScreenWithAnimation(params, lp);
         stack = newStack;
