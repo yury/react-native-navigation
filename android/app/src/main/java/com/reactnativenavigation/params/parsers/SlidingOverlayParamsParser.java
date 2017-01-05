@@ -9,7 +9,7 @@ public class SlidingOverlayParamsParser extends Parser {
 
     public SlidingOverlayParams parse(Bundle bundle) {
         final SlidingOverlayParams result = new SlidingOverlayParams();
-        result.screenInstanceId = bundle.getString("screenId");
+        result.screenInstanceId = bundle.getString("screen");
         result.navigationParams = new NavigationParams(bundle.getBundle("navigationParams"));
         return result;
     }
