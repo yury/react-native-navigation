@@ -18,10 +18,20 @@ public class SlidingOverlay {
     private final RelativeLayout parent;
     private final SlidingOverlayParams params;
 
+    private SlidingListener listener;
+
+    public interface SlidingListener {
+        void onSlidingOverlayGone();
+    }
+
     public SlidingOverlay(Activity activity, RelativeLayout parent, SlidingOverlayParams params) {
         this.activity = activity;
         this.parent = parent;
         this.params = params;
+    }
+
+    public void setSlidingListener(SlidingListener listener) {
+        this.listener = listener;
     }
 
     public void show() {
@@ -65,5 +75,9 @@ public class SlidingOverlay {
     protected void onSlidingOverlayEnd(ContentView view) {
         view.unmountReactView();
         parent.removeView(view);
+
+        if (listener != null) {
+            listener.onSlidingOverlayGone();
+        }
     }
 }

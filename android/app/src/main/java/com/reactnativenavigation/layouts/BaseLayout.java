@@ -1,15 +1,15 @@
 package com.reactnativenavigation.layouts;
 
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.reactnativenavigation.params.SlidingOverlayParams;
-import com.reactnativenavigation.utils.ViewUtils;
-import com.reactnativenavigation.views.ContentView;
 import com.reactnativenavigation.views.slidingOverlay.SlidingOverlay;
+import com.reactnativenavigation.views.slidingOverlay.SlidingOverlaysQueue;
 
 public abstract class BaseLayout extends RelativeLayout implements Layout {
+
+    protected SlidingOverlaysQueue slidingOverlaysQueue = new SlidingOverlaysQueue();
 
     public BaseLayout(AppCompatActivity activity) {
         super(activity);
@@ -17,7 +17,7 @@ public abstract class BaseLayout extends RelativeLayout implements Layout {
 
     @Override
     public void showSlidingOverlay(final SlidingOverlayParams params) {
-        new SlidingOverlay(getActivity(), this, params).show();
+        slidingOverlaysQueue.add(new SlidingOverlay(getActivity(), this, params));
     }
 
     protected AppCompatActivity getActivity() {
