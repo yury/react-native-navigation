@@ -17,7 +17,7 @@ public abstract class BaseLayout extends RelativeLayout implements Layout {
 
     @Override
     public void showSlidingOverlay(final SlidingOverlayParams params) {
-        slidingOverlaysQueue.add(new SlidingOverlay(getActivity(), this, params));
+        slidingOverlaysQueue.add(new SlidingOverlay(this, params));
     }
 
     protected AppCompatActivity getActivity() {

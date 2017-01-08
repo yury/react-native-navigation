@@ -14,7 +14,6 @@ import com.reactnativenavigation.views.ContentView;
 
 public class SlidingOverlay {
 
-    private final Activity activity;
     private final RelativeLayout parent;
     private final SlidingOverlayParams params;
 
@@ -24,8 +23,7 @@ public class SlidingOverlay {
         void onSlidingOverlayGone();
     }
 
-    public SlidingOverlay(Activity activity, RelativeLayout parent, SlidingOverlayParams params) {
-        this.activity = activity;
+    public SlidingOverlay(RelativeLayout parent, SlidingOverlayParams params) {
         this.parent = parent;
         this.params = params;
     }
@@ -66,7 +64,7 @@ public class SlidingOverlay {
         final RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) heightPixels);
         lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-        final ContentView view = new ContentView(activity, params.screenInstanceId, params.navigationParams);
+        final ContentView view = new ContentView(parent.getContext(), params.screenInstanceId, params.navigationParams);
         view.setLayoutParams(lp);
         view.setVisibility(View.INVISIBLE);
         return view;
