@@ -18,6 +18,7 @@ import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.FabParams;
 import com.reactnativenavigation.params.ScreenParams;
 import com.reactnativenavigation.params.SideMenuParams;
+import com.reactnativenavigation.params.SlidingOverlayParams;
 import com.reactnativenavigation.params.SnackbarParams;
 import com.reactnativenavigation.params.TitleBarButtonParams;
 import com.reactnativenavigation.params.TitleBarLeftButtonParams;
@@ -27,6 +28,8 @@ import com.reactnativenavigation.views.BottomTabs;
 import com.reactnativenavigation.views.SideMenu;
 import com.reactnativenavigation.views.SideMenu.Side;
 import com.reactnativenavigation.views.SnackbarAndFabContainer;
+import com.reactnativenavigation.views.slidingOverlay.SlidingOverlay;
+import com.reactnativenavigation.views.slidingOverlay.SlidingOverlaysQueue;
 
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
     private ScreenStack[] screenStacks;
     private final SideMenuParams leftSideMenuParams;
     private final SideMenuParams rightSideMenuParams;
+    private final SlidingOverlaysQueue slidingOverlaysQueue = new SlidingOverlaysQueue();
     private @Nullable SideMenu sideMenu;
     private int currentStackIndex = 0;
 
@@ -205,6 +209,11 @@ public class BottomTabsLayout extends BaseLayout implements AHBottomNavigation.O
     public void showSnackbar(SnackbarParams params) {
         final String eventId = getCurrentScreenStack().peek().getNavigatorEventId();
         snackbarAndFabContainer.showSnackbar(eventId, params);
+    }
+
+    @Override
+    public void showSlidingOverlay(final SlidingOverlayParams params) {
+        slidingOverlaysQueue.add(new SlidingOverlay(this, params));
     }
 
     @Override

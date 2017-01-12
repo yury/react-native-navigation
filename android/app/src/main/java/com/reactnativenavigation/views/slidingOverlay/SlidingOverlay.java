@@ -1,14 +1,13 @@
 package com.reactnativenavigation.views.slidingOverlay;
 
 import android.animation.Animator;
-import android.app.Activity;
+import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.reactnativenavigation.animation.PeekingAnimator;
 import com.reactnativenavigation.params.SlidingOverlayParams;
 import com.reactnativenavigation.screens.Screen;
-import com.reactnativenavigation.utils.StubAnimatorListener;
 import com.reactnativenavigation.utils.ViewUtils;
 import com.reactnativenavigation.views.ContentView;
 
@@ -37,7 +36,7 @@ public class SlidingOverlay {
         parent.addView(view);
 
         final PeekingAnimator animator = new PeekingAnimator(view);
-        animator.addListener(new StubAnimatorListener() {
+        animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationCancel(Animator animator) {
                 onSlidingOverlayEnd(view);
@@ -55,7 +54,6 @@ public class SlidingOverlay {
                 animator.animate();
             }
         });
-
     }
 
     protected ContentView createSlidingOverlayView(SlidingOverlayParams params) {

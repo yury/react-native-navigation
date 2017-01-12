@@ -13,6 +13,7 @@ import com.reactnativenavigation.params.ContextualMenuParams;
 import com.reactnativenavigation.params.FabParams;
 import com.reactnativenavigation.params.ScreenParams;
 import com.reactnativenavigation.params.SideMenuParams;
+import com.reactnativenavigation.params.SlidingOverlayParams;
 import com.reactnativenavigation.params.SnackbarParams;
 import com.reactnativenavigation.params.TitleBarButtonParams;
 import com.reactnativenavigation.params.TitleBarLeftButtonParams;
@@ -22,6 +23,8 @@ import com.reactnativenavigation.views.LeftButtonOnClickListener;
 import com.reactnativenavigation.views.SideMenu;
 import com.reactnativenavigation.views.SideMenu.Side;
 import com.reactnativenavigation.views.SnackbarAndFabContainer;
+import com.reactnativenavigation.views.slidingOverlay.SlidingOverlay;
+import com.reactnativenavigation.views.slidingOverlay.SlidingOverlaysQueue;
 
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class SingleScreenLayout extends BaseLayout {
     private SnackbarAndFabContainer snackbarAndFabContainer;
     protected LeftButtonOnClickListener leftButtonOnClickListener;
     private @Nullable SideMenu sideMenu;
+    private final SlidingOverlaysQueue slidingOverlaysQueue = new SlidingOverlaysQueue();
 
     public SingleScreenLayout(AppCompatActivity activity, SideMenuParams leftSideMenuParams,
                               SideMenuParams rightSideMenuParams, ScreenParams screenParams) {
@@ -208,6 +212,11 @@ public class SingleScreenLayout extends BaseLayout {
     public void showSnackbar(SnackbarParams params) {
         final String navigatorEventId = stack.peek().getNavigatorEventId();
         snackbarAndFabContainer.showSnackbar(navigatorEventId, params);
+    }
+
+    @Override
+    public void showSlidingOverlay(final SlidingOverlayParams params) {
+        slidingOverlaysQueue.add(new SlidingOverlay(this, params));
     }
 
     @Override
