@@ -2,8 +2,11 @@ package com.reactnativenavigation.controllers;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -67,6 +70,15 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         createLayout();
         createModalController();
         NavigationApplication.instance.getActivityCallbacks().onActivityCreated(this, savedInstanceState);
+
+        getWindow().setBackgroundDrawable(null);
+        if (hasBackgroundColor()) {
+            final Drawable backgroundColor = createBackground(AppStyle.appStyle.screenBackgroundColor);
+            getWindow().setBackgroundDrawable(backgroundColor);
+        }
+        else {
+            getWindow().setBackgroundDrawable(null);
+        }
     }
 
     private void disableActivityShowAnimationIfNeeded() {
@@ -81,9 +93,6 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     private void createLayout() {
         layout = LayoutFactory.create(this, activityParams);
-        if (hasBackgroundColor()) {
-            layout.asView().setBackgroundColor(AppStyle.appStyle.screenBackgroundColor.getColor());
-        }
         setContentView(layout.asView());
     }
 
@@ -340,5 +349,12 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         if (mPermissionListener != null && mPermissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             mPermissionListener = null;
         }
+    }
+
+    public GradientDrawable createBackground(@NonNull final StyleParams.Color color) {
+        final GradientDrawable background = new GradientDrawable();
+        background.setShape(GradientDrawable.RECTANGLE);
+        background.setColor(color.getColor());
+        return background;
     }
 }
